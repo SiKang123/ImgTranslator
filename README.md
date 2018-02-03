@@ -16,9 +16,9 @@
   
   在module的build.gradle中添加
   
-    	dependencies {
-	        compile 'com.github.SiKang123:ImgTranslator:lastVersion'
-	    }
+	dependencies {
+		compile 'com.github.SiKang123:ImgTranslator:lastVersion'
+	}
       
   在Application中初始化
   
@@ -26,19 +26,19 @@
      
   传入需要识别的图片
   
-    Bitmap bmp=需要识别的图片，在扫描识别的场景中，就是相机预览图中取出的扫描区域;
-    Translator translator = new PhoneNumberTranslator();
-    //开始识别
-    ImageTranslator.getInstance().translate(translator, rotateToDegrees(bmp, 90), new ImageTranslator.TesseractCallback() {
-      @Override
-      public void onResult(String result) {
-        Log.d("scantest", "扫描结果：  " + result);
-      }
-      @Override
-      public void onFail(String reason) {
-        Log.d("scantest", "解析失败：  " + reason);
-      }
-    });
+	    Bitmap bmp=需要识别的图片，在扫描识别的场景中，就是相机预览图中取出的扫描区域;
+	    Translator translator = new PhoneNumberTranslator();
+	    //开始识别
+	    ImageTranslator.getInstance().translate(translator, rotateToDegrees(bmp, 90), new ImageTranslator.TesseractCallback() {
+	      @Override
+	      public void onResult(String result) {
+		Log.d("scantest", "扫描结果：  " + result);
+	      }
+	      @Override
+	      public void onFail(String reason) {
+		Log.d("scantest", "解析失败：  " + reason);
+	      }
+	    });
   
   
   代码提交
