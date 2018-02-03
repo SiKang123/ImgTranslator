@@ -6,13 +6,13 @@
   --------
   
   在project 的build.gradle中添加
-  
-    allprojects {
-      repositories {
-        ...
-        maven { url 'https://jitpack.io' }
-      }
-	  }
+
+	allprojects {
+	      repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	      }
+	    }
   
   在module的build.gradle中添加
   
@@ -22,7 +22,7 @@
       
   在Application中初始化
   
-     ImageTranslator.getInstance().init(ApplicationContext);
+	ImageTranslator.getInstance().init(ApplicationContext);
      
   传入需要识别的图片
   
