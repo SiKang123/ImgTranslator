@@ -5,6 +5,27 @@
   使用方法：
   --------
   
+  在project 的build.gradle中添加
+  
+    allprojects {
+      repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+      }
+	  }
+  
+  在module的build.gradle中添加
+  
+    	dependencies {
+	        compile 'com.github.SiKang123:ImgTranslator:lastVersion'
+	    }
+      
+  在Application中初始化
+  
+     ImageTranslator.getInstance().init(ApplicationContext);
+     
+  传入需要识别的图片
+  
     Bitmap bmp=需要识别的图片，在扫描识别的场景中，就是相机预览图中取出的扫描区域;
     Translator translator = new PhoneNumberTranslator();
     //开始识别
