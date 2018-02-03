@@ -9,16 +9,19 @@
     Translator translator = new PhoneNumberTranslator();
     //开始识别
     ImageTranslator.getInstance().translate(translator, rotateToDegrees(bmp, 90), new ImageTranslator.TesseractCallback() {
-    @Override
-    public void onResult(String result) {
-    Log.d("scantest", "扫描结果：  " + result);
-    }
-    @Override
-    public void onFail(String reason) {
-    Log.d("scantest", "解析失败：  " + reason);
-    }
+      @Override
+      public void onResult(String result) {
+        Log.d("scantest", "扫描结果：  " + result);
+      }
+      @Override
+      public void onFail(String reason) {
+        Log.d("scantest", "解析失败：  " + reason);
+      }
     });
   
+  
+  代码提交
+  ------------------
   这种方法还可以针对 身份证扫描、邮箱扫描、银行卡号 等做相应的识别算法，如果有感兴趣的朋友愿意分享自己的算法，非常欢迎提交代码，提交代码格式如下：
   
   以手机号识别为例，我创建了一个PhoneNumberTranslator类
