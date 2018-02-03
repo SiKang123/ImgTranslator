@@ -1,7 +1,9 @@
 # ImgTranslator
 基于tesseract 的OCR实时扫描工具，目前只有手机号扫描
 
-使用方法：
+  /**
+  *使用方法：
+  */
   Bitmap bmp=需要识别的图片，在扫描识别的场景中，就是相机预览图中取出的扫描区域;
   Translator translator = new PhoneNumberTranslator();
   //开始识别
@@ -17,15 +19,13 @@
     }
   });
   
-  
-  
-  
   这种方法还可以针对 身份证扫描、邮箱扫描、银行卡号 等做相应的识别算法，如果有感兴趣的朋友愿意分享自己的算法，非常欢迎提交代码，提交代码格式如下：
   
   以手机号识别为例，我创建了一个PhoneNumberTranslator类
   假如你想实现一个邮箱扫描：
   
   1、实现一个算法类,继承Translator
+  
     public class EmailTranslator extends Translator{
     /**
     * 你使用的字库名字
