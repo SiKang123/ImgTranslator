@@ -16,7 +16,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        String path = Environment.getExternalStorageDirectory() + "/Download";
-        ImageTranslator.getInstance().init(path);
+        ImageTranslator.getInstance().init(this);
     }
 }

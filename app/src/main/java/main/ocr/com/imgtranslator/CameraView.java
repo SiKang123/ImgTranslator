@@ -133,14 +133,16 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback, C
                             ImageTranslator.getInstance().translate(translator, rotateToDegrees(bmp, 90), new ImageTranslator.TesseractCallback() {
                                 @Override
                                 public void onResult(String result) {
-                                    endTime = System.currentTimeMillis();
                                     Log.d("scantest", "扫描结果：  " + result);
-                                    if (!TextUtils.isEmpty(result)) {
-                                        //检索结果中是否包含手机号
-                                        Log.d("scantest", "手机号码：  " + result);
-                                    }
-                                    isScanning = false;
                                     Log.d("scantest", "-------------End------------------");
+                                    isScanning = false;
+                                }
+
+                                @Override
+                                public void onFail(String reason) {
+                                    Log.d("scantest", "解析失败：  " + reason);
+                                    Log.d("scantest", "-------------End------------------");
+                                    isScanning = false;
                                 }
                             });
                         } else {

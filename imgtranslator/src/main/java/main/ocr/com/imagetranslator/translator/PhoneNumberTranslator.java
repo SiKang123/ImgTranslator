@@ -1,14 +1,11 @@
 package main.ocr.com.imagetranslator.translator;
 
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Administrator on 2018/2/3.
@@ -589,7 +586,6 @@ public class PhoneNumberTranslator extends Translator {
     public String filterRule() {
         return "^1[3|4|5|7|8][0-9]\\d{4,8}$";
     }
-
 
 
 }

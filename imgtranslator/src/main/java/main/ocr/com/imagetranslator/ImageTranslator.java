@@ -1,19 +1,13 @@
 package main.ocr.com.imagetranslator;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.ImageView;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,14 +18,31 @@ import main.ocr.com.imagetranslator.translator.Translator;
  */
 
 public class ImageTranslator {
-    //字体库路径
-    private String language_path = "";
-
+    public static String languageDir = "";
+    private LanguageManager languageManager;
     private static ImageTranslator mImageTranslator = null;
 
-
     private ImageTranslator() {
+    }
 
+    /**
+     * 初始化
+     * */
+    public void init(Context context) {
+        languageDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath() + "/tessdata/";
+        File file = new File(languageDir);
+        if (!file.exists())
+            file.mkdirs();
+
+        if (!file.isDirectory()) {
+            file.delete();
+            file.mkdirs();
+        }
+
+        if (!file.exists())
+            throw new RuntimeException("初始化失败");
+        languageManager = new LanguageManager(context);
+        languageManager.clearDownload();
     }
 
     public static ImageTranslator getInstance() {
@@ -43,22 +54,14 @@ public class ImageTranslator {
         return mImageTranslator;
     }
 
-    public ImageTranslator init(String path) {
-        File file = new File(path + "/tessdata/");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        if (file.exists()) {
-            language_path = path;
-        } else {
-            throw new RuntimeException("初始化失败");
-        }
-        return this;
-    }
 
-
+    /**
+     * 扫描结果回调用
+     * */
     public interface TesseractCallback {
         void onResult(String result);
+
+        void onFail(String reason);
     }
 
 
@@ -75,8 +78,8 @@ public class ImageTranslator {
             public void run() {
                 if (checkLanguage(translator)) {
                     TessBaseAPI baseApi = new TessBaseAPI();
-                    //初始化OCR的字体数据，TESSBASE_PATH为路径，ENGLISH_LANGUAGE指明要用的字体库（不用加后缀）
-                    if (baseApi.init(language_path, translator.initLanguage())) {
+                    String tessdataPath = languageDir.substring(0, languageDir.length() - "tessdata/".length());
+                    if (baseApi.init(tessdataPath, translator.initLanguage())) {
                         //设置识别模式
                         baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO);
                         //内容捕捉
@@ -98,14 +101,14 @@ public class ImageTranslator {
                         callBack.onResult("");
                     }
                 } else {
-                    callBack.onResult("");
+                    callBack.onFail("正在下载字库 " + translator.initLanguage() + " ...");
                 }
             }
         }).start();
     }
 
     /**
-     * 获取字符串中的手机号
+     * 筛选扫描结果
      */
     public String filter(Translator translator, String str) {
         if (TextUtils.isEmpty(str) || TextUtils.isEmpty(translator.filterRule()))
@@ -127,20 +130,19 @@ public class ImageTranslator {
      * 检查语言包
      */
     public boolean checkLanguage(Translator translator) {
-        if (TextUtils.isEmpty(language_path + "/tessdata")) {
-            throw new RuntimeException("tessdata not found! you need init ImageTranslator first! 未找到字库目录，请先初始化ImageTranslator");
+        if (TextUtils.isEmpty(languageDir))
+            throw new RuntimeException("ImageTranslator未初始化，you need ImageTranslator.getInstance().init(ApplicationContext)  first");
+        String tessdata = languageDir + translator.initLanguage() + ".traineddata";
+        File file = new File(tessdata);
+        if (!file.exists()) {
+            if (languageManager == null)
+                throw new RuntimeException("ImageTranslator未初始化，you need ImageTranslator.getInstance().init(ApplicationContext) first");
+            //下载语言包
+            languageManager.downloadLanguage(translator.initLanguage());
+            return false;
+        } else {
+            return true;
         }
-        File file = new File(language_path + "/tessdata");
-        if (!file.exists())
-            throw new RuntimeException("tessdata not found! you need init ImageTranslator first! 未找到字库目录，请先初始化ImageTranslator");
-
-
-        String tessdata = language_path + translator.initLanguage() + ".traineddata";
-        file = new File(tessdata);
-        if (file.exists())
-            throw new RuntimeException("没有找到正确的字库文件 : " + translator.initLanguage() + ".traineddata  not found!");
-
-        return true;
     }
 
 
